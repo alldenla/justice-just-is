@@ -188,8 +188,8 @@ const ServicePopup: React.FC<{ service: ServiceData; onSelect: (id: ServiceType)
               onClick={() => onSelect(service.id)}
               className="flex-1 py-3 bg-primary text-on-primary rounded-xl text-[10px] font-bold uppercase tracking-[0.15em] hover:bg-primary-dim transition-all flex items-center justify-center gap-2"
             >
-              <Scale className="w-4 h-4" />
-              eLitigation
+              <Info className="w-4 h-4" />
+              Details
             </button>
             <a 
               href={directionsUrl}
