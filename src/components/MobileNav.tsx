@@ -17,18 +17,18 @@ export const MobileNav: React.FC<MobileNavProps> = ({ selectedService, onSelect 
   ];
 
   return (
-    <div className="lg:hidden fixed bottom-0 left-0 right-0 h-20 bg-white/90 backdrop-blur-lg border-t border-outline-variant/10 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] flex items-center justify-around px-4 z-50">
+    <div className="lg:hidden fixed bottom-0 left-0 right-0 h-[calc(5rem+env(safe-area-inset-bottom))] pb-[env(safe-area-inset-bottom)] bg-white/90 backdrop-blur-lg border-t border-outline-variant/10 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] flex items-center justify-around px-2 z-50">
       {items.map((item) => (
         <button
           key={item.id}
           onClick={() => onSelect(item.id)}
           className={cn(
-            "flex flex-col items-center gap-1 transition-all duration-200",
+            "flex flex-col items-center gap-1 transition-all duration-200 min-w-0 px-1",
             selectedService === item.id ? "text-primary scale-110" : "text-on-surface-variant"
           )}
         >
           <item.icon className={cn("w-6 h-6", selectedService === item.id && "fill-primary/10")} />
-          <span className="text-[10px] font-bold uppercase tracking-widest">{item.label}</span>
+          <span className="text-[10px] font-bold uppercase tracking-[0.12em] leading-none text-center truncate max-w-[74px]">{item.label}</span>
         </button>
       ))}
     </div>

@@ -73,7 +73,7 @@ const ServicePopup: React.FC<{ service: ServiceData; onSelect: (id: ServiceType)
   // Template 1: Community Legal Clinic (CLC)
   if (['CLINICS', 'CDC_TOA_PAYOH', 'CLC_WOODLANDS', 'CLC_HOUGANG', 'MIGRANT_CLINIC', 'PRO_BONO_SG'].includes(service.id)) {
     return (
-      <div className="w-[300px] overflow-hidden bg-surface rounded-2xl shadow-2xl">
+      <div className="w-[min(300px,calc(100vw-2rem))] overflow-hidden bg-surface rounded-2xl shadow-2xl">
         <div className="h-1 bg-gradient-to-r from-primary to-primary-dim"></div>
         <div className="p-5">
           <div className="flex gap-4 items-start mb-4">
@@ -134,7 +134,7 @@ const ServicePopup: React.FC<{ service: ServiceData; onSelect: (id: ServiceType)
   // Template 2: Supreme Court
   if (service.id === 'SUPREME_COURT') {
     return (
-      <div className="w-[310px] overflow-hidden bg-surface rounded-2xl shadow-2xl">
+      <div className="w-[min(310px,calc(100vw-2rem))] overflow-hidden bg-surface rounded-2xl shadow-2xl">
         <div className="bg-primary p-5 pb-6">
           <div className="flex items-center gap-4 mb-5">
             <div className="w-11 h-11 rounded-full bg-white/10 border border-white/20 flex items-center justify-center shrink-0">
@@ -190,7 +190,7 @@ const ServicePopup: React.FC<{ service: ServiceData; onSelect: (id: ServiceType)
   // Template 3: SCT
   if (service.id === 'SCT') {
     return (
-      <div className="w-[300px] overflow-hidden bg-surface rounded-2xl shadow-2xl">
+      <div className="w-[min(300px,calc(100vw-2rem))] overflow-hidden bg-surface rounded-2xl shadow-2xl">
         <div className="bg-primary p-5 flex items-center gap-4">
           <div className="w-10 h-10 rounded-xl bg-white border border-white/80 flex items-center justify-center shrink-0 overflow-hidden">
             {popupLogo ? (
@@ -255,7 +255,7 @@ const ServicePopup: React.FC<{ service: ServiceData; onSelect: (id: ServiceType)
   // Template 4: OSLAS
   if (service.id === 'OSLAS') {
     return (
-      <div className="w-[290px] overflow-hidden bg-surface rounded-2xl shadow-2xl">
+      <div className="w-[min(290px,calc(100vw-2rem))] overflow-hidden bg-surface rounded-2xl shadow-2xl">
         <div className="bg-primary py-2.5 px-5 flex items-center gap-2.5">
           <div className="w-2 h-2 rounded-full bg-white/60 animate-pulse"></div>
           <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-white/80">Walk-in · No Appointment</span>
@@ -322,7 +322,7 @@ const ServicePopup: React.FC<{ service: ServiceData; onSelect: (id: ServiceType)
   // Template 5: FIDReC
   if (service.id === 'FIDReC') {
     return (
-      <div className="w-[310px] overflow-hidden bg-surface rounded-2xl shadow-2xl">
+      <div className="w-[min(310px,calc(100vw-2rem))] overflow-hidden bg-surface rounded-2xl shadow-2xl">
         <div className="bg-gradient-to-br from-primary to-primary-dim p-5">
           <div className="flex items-center gap-4 mb-5">
             <div className="w-10 h-10 rounded-xl bg-white border border-white/80 flex items-center justify-center shrink-0 overflow-hidden">
@@ -477,18 +477,18 @@ export const Map: React.FC<MapProps> = ({ selectedService, onSelect }) => {
       </MapContainer>
 
       {/* Floating Search Bar */}
-      <div className="absolute top-8 left-1/2 -translate-x-1/2 glass-panel p-2 rounded-full shadow-2xl flex items-center gap-2 pointer-events-auto z-[1000] border-primary/10">
-        <div className="flex items-center gap-3 px-6 py-2 bg-white rounded-full border border-outline-variant/20">
+      <div className="absolute top-3 md:top-8 left-1/2 -translate-x-1/2 glass-panel p-1.5 md:p-2 rounded-full shadow-2xl flex items-center gap-1.5 md:gap-2 pointer-events-auto z-1000 border-primary/10 w-[calc(100%-1rem)] max-w-[700px]">
+        <div className="flex items-center gap-2 md:gap-3 px-3 md:px-6 py-2 bg-white rounded-full border border-outline-variant/20 flex-1 min-w-0">
           <Search className="w-4 h-4 text-primary" />
           <input
             type="text"
             placeholder="Search legal services in Singapore..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="border-none bg-transparent focus:ring-0 text-sm font-medium text-on-surface-variant w-72"
+            className="border-none bg-transparent focus:ring-0 text-xs md:text-sm font-medium text-on-surface-variant w-full min-w-0"
           />
         </div>
-        <button className="p-3 bg-primary text-on-primary rounded-full hover:shadow-lg transition-all active:scale-95 shadow-primary/30">
+        <button className="p-2.5 md:p-3 bg-primary text-on-primary rounded-full hover:shadow-lg transition-all active:scale-95 shadow-primary/30 shrink-0">
           <SlidersHorizontal className="w-5 h-5" />
         </button>
       </div>

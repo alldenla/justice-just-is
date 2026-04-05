@@ -27,13 +27,13 @@ export default function App() {
   };
 
   return (
-    <div className="flex h-screen overflow-hidden bg-surface">
+    <div className="flex h-dvh min-h-dvh overflow-hidden bg-surface">
       <Sidebar selectedService={selectedService} onSelect={handleSelect} />
       
       <div className="flex-1 flex flex-col relative lg:pl-80">
         <TopNav selectedService={selectedService} onSelect={handleSelect} />
         
-        <main className="flex-1 flex relative pt-16 h-full overflow-hidden">
+        <main className="flex-1 flex relative pt-16 pb-[calc(5rem+env(safe-area-inset-bottom))] lg:pb-0 h-full overflow-hidden">
           <Map selectedService={selectedService} onSelect={handleSelect} />
           
           <AnimatePresence>
