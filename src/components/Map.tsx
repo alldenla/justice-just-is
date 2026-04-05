@@ -60,14 +60,27 @@ interface MapProps {
   focusPopupService?: ServiceType | null;
 }
 
-const ChangeView = ({ center, zoom }: { center: [number, number], zoom: number }) => {
+const ChangeView = ({
+  center,
+  zoom,
+  skipNextFlyToRef,
+}: {
+  center: [number, number],
+  zoom: number,
+  skipNextFlyToRef: React.MutableRefObject<boolean>,
+}) => {
   const map = useMap();
   useEffect(() => {
+    if (skipNextFlyToRef.current) {
+      skipNextFlyToRef.current = false;
+      return;
+    }
+
     map.flyTo(center, zoom, {
       duration: 0.55,
       easeLinearity: 0.25,
     });
-  }, [center, zoom, map]);
+  }, [center, zoom, map, skipNextFlyToRef]);
   return null;
 };
 
@@ -476,11 +489,40 @@ const ServicePopup: React.FC<{ service: ServiceData; onSelect: (id: ServiceType)
 
 export const Map: React.FC<MapProps> = ({ selectedService, onSelect, onMarkerSelect, focusPopupService = null }) => {
   const [searchQuery, setSearchQuery] = useState('');
+  const mapRef = useRef<L.Map | null>(null);
+  const skipNextFlyToRef = useRef(false);
   const markerRefs = useRef<Partial<Record<ServiceType, L.Marker>>>( {} );
   const currentService = SERVICES[selectedService];
-  const center: [number, number] = currentService 
-    ? [currentService.coordinates.lat, currentService.coordinates.lng] 
-    : [1.285, 103.845];
+
+  // Recenter by using the popup's real rendered position instead of marker offsets.
+  const centerPopupOnScreen = (popup: L.Popup, map: L.Map) => {
+    window.requestAnimationFrame(() => {
+      const popupEl = popup.getElement();
+      if (!popupEl) return;
+
+      const mapRect = map.getContainer().getBoundingClientRect();
+      const popupRect = popupEl.getBoundingClientRect();
+
+      const popupCenterX = popupRect.left + popupRect.width / 2;
+      const popupCenterY = popupRect.top + popupRect.height / 2;
+      const mapCenterX = mapRect.left + mapRect.width / 2;
+      const mapCenterY = mapRect.top + mapRect.height / 2;
+
+      const deltaX = popupCenterX - mapCenterX;
+      const deltaY = popupCenterY - mapCenterY;
+
+      if (Math.abs(deltaX) > 1 || Math.abs(deltaY) > 1) {
+        map.panBy([deltaX, deltaY], { animate: true, duration: 0.35 });
+      }
+    });
+  };
+  const center = useMemo<[number, number]>(() => {
+    if (currentService) {
+      return [currentService.coordinates.lat, currentService.coordinates.lng];
+    }
+
+    return [1.285, 103.845];
+  }, [currentService]);
 
   const mainServices: ServiceType[] = ['FIDReC', 'OSLAS', 'SCT', 'SUPREME_COURT'];
   
@@ -534,13 +576,14 @@ export const Map: React.FC<MapProps> = ({ selectedService, onSelect, onMarkerSel
         scrollWheelZoom={true}
         className="w-full h-full"
         zoomControl={false}
+        ref={mapRef}
       >
         {/* Minimal, clean map style using CartoDB Positron */}
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
         />
-        <ChangeView center={center} zoom={selectedService === 'HOME' ? 12 : 16} />
+        <ChangeView center={center} zoom={selectedService === 'HOME' ? 12 : 16} skipNextFlyToRef={skipNextFlyToRef} />
         
         {allMarkers.map((marker) => (
           <Marker 
@@ -553,10 +596,27 @@ export const Map: React.FC<MapProps> = ({ selectedService, onSelect, onMarkerSel
               }
             }}
             eventHandlers={{
-              click: () => (onMarkerSelect ? onMarkerSelect(marker.id) : onSelect(marker.id)),
+              click: () => {
+                skipNextFlyToRef.current = true;
+                (onMarkerSelect ? onMarkerSelect(marker.id) : onSelect(marker.id));
+
+                const map = mapRef.current;
+                if (!map) return;
+
+                window.setTimeout(() => {
+                  const markerInstance = markerRefs.current[marker.id];
+                  if (!markerInstance) return;
+
+                  const popup = markerInstance.getPopup();
+                  if (!popup) return;
+
+                  markerInstance.openPopup();
+                  centerPopupOnScreen(popup, map);
+                }, 0);
+              },
             }}
           >
-            <Popup className="custom-popup" minWidth={0} maxWidth={500}>
+            <Popup className="custom-popup" minWidth={0} maxWidth={500} autoPan={false}>
               <ServicePopup service={marker.data} onSelect={onSelect} />
             </Popup>
           </Marker>
