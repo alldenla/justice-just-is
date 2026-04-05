@@ -1,0 +1,9 @@
+node_modules/
+build/
+dist/
+coverage/
+src/assets/videos/*.mp4
+.DS_Store
+*.log
+.env*
+!.env.example

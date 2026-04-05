@@ -1,0 +1,5 @@
+{
+  "name": "Justice Just Is",
+  "description": "A comprehensive legal services navigator for Singapore, featuring the official Ministry of Law color palette.",
+  "requestFramePermissions": ["geolocation"]
+}
