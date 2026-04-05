@@ -10,7 +10,7 @@ import { AnimatePresence } from 'motion/react';
 export default function App() {
   const [selectedService, setSelectedService] = useState<ServiceType>('HOME');
   const [isPanelOpen, setIsPanelOpen] = useState(false);
-  const [mobileFocusTarget, setMobileFocusTarget] = useState<ServiceType | null>(null);
+  const [popupFocusTarget, setPopupFocusTarget] = useState<ServiceType | null>(null);
   const [isMobileView, setIsMobileView] = useState(() =>
     typeof window !== 'undefined' ? window.innerWidth < 1024 : false
   );
@@ -39,7 +39,7 @@ export default function App() {
 
   const handleSelect = (service: ServiceType) => {
     setSelectedService(service);
-    setMobileFocusTarget(null);
+    setPopupFocusTarget(null);
 
     if (servicesWithPanel.includes(service)) {
       setIsPanelOpen(true);
@@ -50,7 +50,7 @@ export default function App() {
 
   const handleMarkerSelect = (service: ServiceType) => {
     setSelectedService(service);
-    setMobileFocusTarget(null);
+    setPopupFocusTarget(null);
 
     if (isMobileView) {
       setIsPanelOpen(false);
@@ -69,19 +69,41 @@ export default function App() {
 
     if (service === 'HOME' || service === 'HELP') {
       setIsPanelOpen(false);
-      setMobileFocusTarget(null);
+      setPopupFocusTarget(null);
       return;
     }
 
     if (SERVICES[service]) {
       setIsPanelOpen(false);
-      setMobileFocusTarget(service);
+      setPopupFocusTarget(service);
+    }
+  };
+
+  const handleSidebarSelect = (service: ServiceType) => {
+    setSelectedService(service);
+
+    if (service === 'HOME' || service === 'HELP') {
+      setIsPanelOpen(false);
+      setPopupFocusTarget(null);
+      return;
+    }
+
+    if (SERVICES[service]) {
+      setPopupFocusTarget(service);
+    } else {
+      setPopupFocusTarget(null);
+    }
+
+    if (servicesWithPanel.includes(service)) {
+      setIsPanelOpen(true);
+    } else {
+      setIsPanelOpen(false);
     }
   };
 
   return (
     <div className="flex h-dvh min-h-dvh overflow-hidden bg-surface">
-      <Sidebar selectedService={selectedService} onSelect={handleSelect} />
+      <Sidebar selectedService={selectedService} onSelect={handleSidebarSelect} />
       
       <div className="flex-1 flex flex-col relative lg:pl-80">
         <TopNav selectedService={selectedService} onSelect={handleSelect} onMobileNavigate={handleMobileNavigate} />
@@ -91,7 +113,7 @@ export default function App() {
             selectedService={selectedService}
             onSelect={handleSelect}
             onMarkerSelect={handleMarkerSelect}
-            focusPopupService={mobileFocusTarget}
+            focusPopupService={popupFocusTarget}
           />
           
           <AnimatePresence>

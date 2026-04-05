@@ -47,6 +47,58 @@
 }
 
 @layer components {
+  .marker-shell {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+
+  .marker-pin {
+    position: relative;
+    z-index: 2;
+    will-change: transform;
+  }
+
+  .marker-pulse {
+    position: absolute;
+    inset: 50% auto auto 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 9999px;
+    background: color-mix(in srgb, var(--color-primary) 28%, transparent);
+    opacity: 0;
+    z-index: 1;
+  }
+
+  .marker-shell-selected .marker-pin {
+    animation: marker-selected-bob 900ms ease-in-out infinite;
+  }
+
+  .marker-shell-selected .marker-pulse {
+    animation: marker-selected-pulse 1200ms ease-out infinite;
+  }
+
+  @keyframes marker-selected-bob {
+    0%, 100% {
+      transform: rotate(-45deg) translateY(0);
+    }
+    50% {
+      transform: rotate(-45deg) translateY(-3px);
+    }
+  }
+
+  @keyframes marker-selected-pulse {
+    0% {
+      transform: translate(-50%, -50%) scale(0.7);
+      opacity: 0.55;
+    }
+    100% {
+      transform: translate(-50%, -50%) scale(1.35);
+      opacity: 0;
+    }
+  }
+
   .glass-panel {
     @apply bg-surface/90 backdrop-blur-[20px] border border-outline-variant/20 shadow-xl;
   }

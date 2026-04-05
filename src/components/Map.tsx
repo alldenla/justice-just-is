@@ -15,37 +15,40 @@ import markerIconRetina from 'leaflet/dist/images/marker-icon-2x.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 
 // Custom Marker Icons
-const createCustomIcon = (color: string, isMain: boolean) => {
+const createCustomIcon = (color: string, isMain: boolean, isSelected: boolean) => {
+  const size = isMain ? 32 : 24;
+  const innerSize = isMain ? 16 : 12;
+
   return L.divIcon({
     className: 'custom-div-icon',
-    html: `<div style="
-      background-color: ${color};
-      width: ${isMain ? '32px' : '24px'};
-      height: ${isMain ? '32px' : '24px'};
-      border-radius: 50% 50% 50% 0;
-      transform: rotate(-45deg);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 2px solid white;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    ">
-      <div style="
-        transform: rotate(45deg);
-        width: ${isMain ? '16px' : '12px'};
-        height: ${isMain ? '16px' : '12px'};
-        background-color: white;
-        border-radius: 50%;
-      "></div>
+    html: `<div class="marker-shell${isSelected ? ' marker-shell-selected' : ''}" style="width:${size}px;height:${size}px;">
+      <div class="marker-pin" style="
+        background-color: ${color};
+        width: ${size}px;
+        height: ${size}px;
+        border-radius: 50% 50% 50% 0;
+        transform: rotate(-45deg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid white;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      ">
+        <div style="
+          transform: rotate(45deg);
+          width: ${innerSize}px;
+          height: ${innerSize}px;
+          background-color: white;
+          border-radius: 50%;
+        "></div>
+      </div>
+      <span class="marker-pulse" style="width:${size + 12}px;height:${size + 12}px;"></span>
     </div>`,
-    iconSize: [isMain ? 32 : 24, isMain ? 32 : 24],
+    iconSize: [size, size],
     iconAnchor: [isMain ? 16 : 12, isMain ? 32 : 24],
     popupAnchor: [0, isMain ? -32 : -24]
   });
 };
-
-const mainIcon = createCustomIcon('#902630', true); // Crimson Red
-const secondaryIcon = createCustomIcon('#BF9495', false); // Dusty Rose
 
 const POPUP_LOGOS: Partial<Record<ServiceType, string>> = {
   FIDReC: fidrecLogo,
@@ -63,15 +66,17 @@ interface MapProps {
 const ChangeView = ({
   center,
   zoom,
+  disableFlyTo,
   skipNextFlyToRef,
 }: {
   center: [number, number],
   zoom: number,
+  disableFlyTo: boolean,
   skipNextFlyToRef: React.MutableRefObject<boolean>,
 }) => {
   const map = useMap();
   useEffect(() => {
-    if (skipNextFlyToRef.current) {
+    if (disableFlyTo || skipNextFlyToRef.current) {
       skipNextFlyToRef.current = false;
       return;
     }
@@ -493,6 +498,7 @@ export const Map: React.FC<MapProps> = ({ selectedService, onSelect, onMarkerSel
   const skipNextFlyToRef = useRef(false);
   const markerRefs = useRef<Partial<Record<ServiceType, L.Marker>>>( {} );
   const currentService = SERVICES[selectedService];
+  const shouldDisableFlyTo = !!focusPopupService && focusPopupService === selectedService;
 
   // Recenter by using the popup's real rendered position instead of marker offsets.
   const centerPopupOnScreen = (popup: L.Popup, map: L.Map) => {
@@ -554,13 +560,18 @@ export const Map: React.FC<MapProps> = ({ selectedService, onSelect, onMarkerSel
       return;
     }
 
+    const map = mapRef.current;
     const targetMarker = markerRefs.current[focusPopupService];
-    if (!targetMarker) {
+    if (!targetMarker || !map) {
       return;
     }
 
     const timer = window.setTimeout(() => {
       targetMarker.openPopup();
+      const popup = targetMarker.getPopup();
+      if (popup) {
+        centerPopupOnScreen(popup, map);
+      }
     }, 180);
 
     return () => {
@@ -583,13 +594,17 @@ export const Map: React.FC<MapProps> = ({ selectedService, onSelect, onMarkerSel
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
         />
-        <ChangeView center={center} zoom={selectedService === 'HOME' ? 12 : 16} skipNextFlyToRef={skipNextFlyToRef} />
+        <ChangeView center={center} zoom={selectedService === 'HOME' ? 12 : 16} disableFlyTo={shouldDisableFlyTo} skipNextFlyToRef={skipNextFlyToRef} />
         
         {allMarkers.map((marker) => (
           <Marker 
             key={marker.id} 
             position={marker.coords}
-            icon={marker.isMain ? mainIcon : secondaryIcon}
+            icon={createCustomIcon(
+              marker.isMain ? '#902630' : '#BF9495',
+              marker.isMain,
+              marker.id === selectedService
+            )}
             ref={(instance) => {
               if (instance) {
                 markerRefs.current[marker.id] = instance;
