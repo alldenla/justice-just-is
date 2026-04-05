@@ -10,8 +10,9 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ selectedService, onSelect }) => {
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
-    'STATE_COURTS': true,
-    'CLINICS_GROUP': false
+    'STATE_COURTS': false,
+    'CLINICS_GROUP': false,
+    'ADR_GROUP': false
   });
 
   const toggleSection = (id: string) => {
@@ -24,6 +25,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ selectedService, onSelect }) =
   const navItems = [
     { id: 'HOME' as ServiceType, label: 'Home', icon: Home },
     { id: 'SUPREME_COURT' as ServiceType, label: 'Supreme Court', icon: ShieldCheck },
+    { id: 'FAMILY_JUSTICE_COURTS' as ServiceType, label: 'Family Justice Courts', icon: ShieldCheck },
     { 
       id: 'STATE_COURTS' as ServiceType, 
       label: 'State Courts', 
@@ -32,6 +34,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ selectedService, onSelect }) =
         { id: 'SCT' as ServiceType, label: 'Small Claims Tribunal' },
         { id: 'OSLAS' as ServiceType, label: 'OSLAS Advice Scheme' },
         { id: 'PRO_BONO_SG' as ServiceType, label: 'Pro Bono SG' },
+        { id: 'PUBLIC_DEFENDER_OFFICE' as ServiceType, label: 'Public Defender\'s Office' },
+        { id: 'STATE_COURTS_HELP_CENTRE' as ServiceType, label: 'State Courts HELP Centre' },
+        { id: 'EMPLOYMENT_CLAIMS_TRIBUNAL' as ServiceType, label: 'Employment Claims Tribunals' },
+        { id: 'COMMUNITY_DISPUTES_TRIBUNAL' as ServiceType, label: 'Community Disputes Tribunals' },
+        { id: 'CENTRE_SPECIALIST_SERVICES' as ServiceType, label: 'Centre for Specialist Services' },
       ]
     },
     { id: 'FIDReC' as ServiceType, label: 'FIDReC', icon: Landmark },
@@ -40,11 +47,21 @@ export const Sidebar: React.FC<SidebarProps> = ({ selectedService, onSelect }) =
       label: 'Legal Clinics', 
       icon: HeartPulse,
       subItems: [
-        { id: 'CLINICS' as ServiceType, label: 'General Info' },
+        { id: 'LEGAL_AID_BUREAU' as ServiceType, label: 'Legal Aid Bureau' },
         { id: 'CDC_TOA_PAYOH' as ServiceType, label: 'CDC Toa Payoh' },
         { id: 'CLC_WOODLANDS' as ServiceType, label: 'CLC Woodlands' },
         { id: 'CLC_HOUGANG' as ServiceType, label: 'CLC Hougang' },
         { id: 'MIGRANT_CLINIC' as ServiceType, label: 'Migrant Worker Clinic' },
+      ]
+    },
+    {
+      id: 'ADR_GROUP' as ServiceType,
+      label: 'Mediation & ADR',
+      icon: Landmark,
+      subItems: [
+        { id: 'SINGAPORE_MEDIATION_CENTRE' as ServiceType, label: 'Singapore Mediation Centre' },
+        { id: 'SINGAPORE_INTERNATIONAL_MEDIATION_CENTRE' as ServiceType, label: 'SIMC' },
+        { id: 'MAXWELL_CHAMBERS' as ServiceType, label: 'Maxwell Chambers' },
       ]
     },
     { id: 'HELP' as ServiceType, label: 'Help Center', icon: HelpCircle },

@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useMemo } from 'react';
-import { Search, SlidersHorizontal, Landmark, Gavel, HeartPulse, Scale, MapPin, ExternalLink, Clock, Navigation, Phone, ChevronRight, Users, Info } from 'lucide-react';
+import React, { useEffect, useState, useMemo, useRef } from 'react';
+import { Search, Landmark, Gavel, HeartPulse, Scale, MapPin, ExternalLink, Clock, Navigation, Phone, ChevronRight, Users, Info } from 'lucide-react';
 import { ServiceType, ServiceData } from '../types';
 import { SERVICES } from '../constants';
 import { cn } from '../lib/utils';
@@ -56,12 +56,17 @@ const POPUP_LOGOS: Partial<Record<ServiceType, string>> = {
 interface MapProps {
   selectedService: ServiceType;
   onSelect: (service: ServiceType) => void;
+  onMarkerSelect?: (service: ServiceType) => void;
+  focusPopupService?: ServiceType | null;
 }
 
 const ChangeView = ({ center, zoom }: { center: [number, number], zoom: number }) => {
   const map = useMap();
   useEffect(() => {
-    map.setView(center, zoom);
+    map.flyTo(center, zoom, {
+      duration: 0.55,
+      easeLinearity: 0.25,
+    });
   }, [center, zoom, map]);
   return null;
 };
@@ -71,7 +76,7 @@ const ServicePopup: React.FC<{ service: ServiceData; onSelect: (id: ServiceType)
   const popupLogo = POPUP_LOGOS[service.id];
 
   // Template 1: Community Legal Clinic (CLC)
-  if (['CLINICS', 'CDC_TOA_PAYOH', 'CLC_WOODLANDS', 'CLC_HOUGANG', 'MIGRANT_CLINIC', 'PRO_BONO_SG'].includes(service.id)) {
+  if (['LEGAL_AID_BUREAU', 'CDC_TOA_PAYOH', 'CLC_WOODLANDS', 'CLC_HOUGANG', 'MIGRANT_CLINIC', 'PRO_BONO_SG', 'PUBLIC_DEFENDER_OFFICE', 'STATE_COURTS_HELP_CENTRE', 'CENTRE_SPECIALIST_SERVICES'].includes(service.id)) {
     return (
       <div className="w-[min(300px,calc(100vw-2rem))] overflow-hidden bg-surface rounded-2xl shadow-2xl">
         <div className="h-1 bg-gradient-to-r from-primary to-primary-dim"></div>
@@ -235,8 +240,8 @@ const ServicePopup: React.FC<{ service: ServiceData; onSelect: (id: ServiceType)
               onClick={() => onSelect(service.id)}
               className="flex-1 py-3 bg-primary text-on-primary rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-primary-dim transition-all flex items-center justify-center gap-2"
             >
-              <ExternalLink className="w-4 h-4" />
-              File a Claim
+              <Info className="w-4 h-4" />
+              Details
             </button>
             <a 
               href={directionsUrl}
@@ -380,8 +385,8 @@ const ServicePopup: React.FC<{ service: ServiceData; onSelect: (id: ServiceType)
               onClick={() => onSelect(service.id)}
               className="flex-1 py-3 bg-primary text-on-primary rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-primary-dim transition-all flex items-center justify-center gap-2"
             >
-              <ExternalLink className="w-4 h-4" />
-              File Dispute
+              <Info className="w-4 h-4" />
+              Details
             </button>
             <a 
               href={directionsUrl}
@@ -390,6 +395,63 @@ const ServicePopup: React.FC<{ service: ServiceData; onSelect: (id: ServiceType)
               className="px-4 py-3 bg-surface-container-high text-on-surface rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-surface-container-highest transition-all flex items-center justify-center"
             >
               <Navigation className="w-4 h-4" />
+            </a>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Template 6: Other Legal Institutions
+  if ([
+    'FAMILY_JUSTICE_COURTS',
+    'EMPLOYMENT_CLAIMS_TRIBUNAL',
+    'COMMUNITY_DISPUTES_TRIBUNAL',
+    'SINGAPORE_MEDIATION_CENTRE',
+    'SINGAPORE_INTERNATIONAL_MEDIATION_CENTRE',
+    'MAXWELL_CHAMBERS',
+  ].includes(service.id)) {
+    return (
+      <div className="w-[min(310px,calc(100vw-2rem))] overflow-hidden bg-surface rounded-2xl shadow-2xl border border-outline-variant/10">
+        <div className="bg-surface-container-low border-b border-outline-variant/10 px-5 py-4 flex items-start gap-3">
+          <div className="w-10 h-10 rounded-xl bg-primary-container border border-primary/10 flex items-center justify-center shrink-0">
+            <Landmark className="w-5 h-5 text-primary" />
+          </div>
+          <div>
+            <h3 className="font-headline font-bold text-sm leading-tight text-on-surface">{service.name}</h3>
+            <p className="text-[10px] text-on-surface-variant font-medium leading-tight mt-1">{service.fullName}</p>
+          </div>
+        </div>
+
+        <div className="p-5">
+          <p className="text-[11px] text-on-surface-variant leading-relaxed mb-4">{service.tagline}</p>
+
+          <div className="space-y-2.5 mb-5">
+            <div className="flex gap-2.5 items-start text-[11px] text-on-surface-variant leading-relaxed">
+              <MapPin className="w-3.5 h-3.5 text-primary shrink-0 mt-0.5" />
+              <span>{service.address}, {service.postalCode}</span>
+            </div>
+            <div className="flex gap-2.5 items-start text-[11px] text-on-surface-variant leading-relaxed">
+              <Clock className="w-3.5 h-3.5 text-primary shrink-0 mt-0.5" />
+              <span>{service.hours[0]?.day || 'Office Hours'}: {service.hours[0]?.time || 'See details'}</span>
+            </div>
+          </div>
+
+          <div className="flex gap-2">
+            <button
+              onClick={() => onSelect(service.id)}
+              className="flex-1 py-3 bg-primary text-on-primary rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-primary-dim transition-all flex items-center justify-center gap-2"
+            >
+              <Info className="w-3.5 h-3.5" />
+              Details
+            </button>
+            <a
+              href={directionsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-4 py-3 bg-surface-container-high text-on-surface rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-surface-container-highest transition-all flex items-center justify-center"
+            >
+              <Navigation className="w-3.5 h-3.5" />
             </a>
           </div>
         </div>
@@ -412,8 +474,9 @@ const ServicePopup: React.FC<{ service: ServiceData; onSelect: (id: ServiceType)
   );
 };
 
-export const Map: React.FC<MapProps> = ({ selectedService, onSelect }) => {
+export const Map: React.FC<MapProps> = ({ selectedService, onSelect, onMarkerSelect, focusPopupService = null }) => {
   const [searchQuery, setSearchQuery] = useState('');
+  const markerRefs = useRef<Partial<Record<ServiceType, L.Marker>>>( {} );
   const currentService = SERVICES[selectedService];
   const center: [number, number] = currentService 
     ? [currentService.coordinates.lat, currentService.coordinates.lng] 
@@ -444,6 +507,25 @@ export const Map: React.FC<MapProps> = ({ selectedService, onSelect }) => {
     );
   }, [searchQuery]);
 
+  useEffect(() => {
+    if (!focusPopupService || focusPopupService === 'HOME' || focusPopupService === 'HELP') {
+      return;
+    }
+
+    const targetMarker = markerRefs.current[focusPopupService];
+    if (!targetMarker) {
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      targetMarker.openPopup();
+    }, 180);
+
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, [focusPopupService, allMarkers]);
+
   return (
     <div className="flex-1 relative bg-[#f8f9fa] overflow-hidden h-full z-0">
       <MapContainer 
@@ -465,8 +547,13 @@ export const Map: React.FC<MapProps> = ({ selectedService, onSelect }) => {
             key={marker.id} 
             position={marker.coords}
             icon={marker.isMain ? mainIcon : secondaryIcon}
+            ref={(instance) => {
+              if (instance) {
+                markerRefs.current[marker.id] = instance;
+              }
+            }}
             eventHandlers={{
-              click: () => onSelect(marker.id),
+              click: () => (onMarkerSelect ? onMarkerSelect(marker.id) : onSelect(marker.id)),
             }}
           >
             <Popup className="custom-popup" minWidth={0} maxWidth={500}>
@@ -477,7 +564,7 @@ export const Map: React.FC<MapProps> = ({ selectedService, onSelect }) => {
       </MapContainer>
 
       {/* Floating Search Bar */}
-      <div className="absolute top-3 md:top-8 left-1/2 -translate-x-1/2 glass-panel p-1.5 md:p-2 rounded-full shadow-2xl flex items-center gap-1.5 md:gap-2 pointer-events-auto z-1000 border-primary/10 w-[calc(100%-1rem)] max-w-[700px]">
+      <div className="absolute top-3 md:top-8 left-1/2 -translate-x-1/2 glass-panel p-1.5 md:p-2 rounded-full shadow-2xl flex items-center pointer-events-auto z-1000 border-primary/10 w-[calc(100%-1rem)] max-w-[700px]">
         <div className="flex items-center gap-2 md:gap-3 px-3 md:px-6 py-2 bg-white rounded-full border border-outline-variant/20 flex-1 min-w-0">
           <Search className="w-4 h-4 text-primary" />
           <input
@@ -488,9 +575,6 @@ export const Map: React.FC<MapProps> = ({ selectedService, onSelect }) => {
             className="border-none bg-transparent focus:ring-0 text-xs md:text-sm font-medium text-on-surface-variant w-full min-w-0"
           />
         </div>
-        <button className="p-2.5 md:p-3 bg-primary text-on-primary rounded-full hover:shadow-lg transition-all active:scale-95 shadow-primary/30 shrink-0">
-          <SlidersHorizontal className="w-5 h-5" />
-        </button>
       </div>
 
     </div>

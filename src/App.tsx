@@ -1,28 +1,81 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Sidebar } from './components/Sidebar';
 import { TopNav } from './components/TopNav';
 import { Map } from './components/Map';
 import { InfoPanel } from './components/InfoPanel';
-import { MobileNav } from './components/MobileNav';
 import { ServiceType } from './types';
 import { SERVICES } from './constants';
 import { AnimatePresence } from 'motion/react';
 
 export default function App() {
-  const [selectedService, setSelectedService] = useState<ServiceType>('FIDReC');
-  const [isPanelOpen, setIsPanelOpen] = useState(true);
+  const [selectedService, setSelectedService] = useState<ServiceType>('HOME');
+  const [isPanelOpen, setIsPanelOpen] = useState(false);
+  const [mobileFocusTarget, setMobileFocusTarget] = useState<ServiceType | null>(null);
+  const [isMobileView, setIsMobileView] = useState(() =>
+    typeof window !== 'undefined' ? window.innerWidth < 1024 : false
+  );
+
+  const servicesWithPanel: ServiceType[] = [
+    'FIDReC', 'OSLAS', 'SCT',
+    'SUPREME_COURT', 'PRO_BONO_SG', 'CDC_TOA_PAYOH',
+    'CLC_WOODLANDS', 'CLC_HOUGANG', 'MIGRANT_CLINIC',
+    'LEGAL_AID_BUREAU', 'FAMILY_JUSTICE_COURTS', 'PUBLIC_DEFENDER_OFFICE',
+    'STATE_COURTS_HELP_CENTRE', 'CENTRE_SPECIALIST_SERVICES',
+    'EMPLOYMENT_CLAIMS_TRIBUNAL', 'COMMUNITY_DISPUTES_TRIBUNAL',
+    'SINGAPORE_MEDIATION_CENTRE', 'SINGAPORE_INTERNATIONAL_MEDIATION_CENTRE',
+    'MAXWELL_CHAMBERS'
+  ];
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobileView(window.innerWidth < 1024);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   const handleSelect = (service: ServiceType) => {
     setSelectedService(service);
-    const servicesWithPanel: ServiceType[] = [
-      'FIDReC', 'OSLAS', 'SCT', 'CLINICS', 
-      'SUPREME_COURT', 'PRO_BONO_SG', 'CDC_TOA_PAYOH', 
-      'CLC_WOODLANDS', 'CLC_HOUGANG', 'MIGRANT_CLINIC'
-    ];
+    setMobileFocusTarget(null);
+
     if (servicesWithPanel.includes(service)) {
       setIsPanelOpen(true);
     } else {
       setIsPanelOpen(false);
+    }
+  };
+
+  const handleMarkerSelect = (service: ServiceType) => {
+    setSelectedService(service);
+    setMobileFocusTarget(null);
+
+    if (isMobileView) {
+      setIsPanelOpen(false);
+      return;
+    }
+
+    if (servicesWithPanel.includes(service)) {
+      setIsPanelOpen(true);
+    } else {
+      setIsPanelOpen(false);
+    }
+  };
+
+  const handleMobileNavigate = (service: ServiceType) => {
+    setSelectedService(service);
+
+    if (service === 'HOME' || service === 'HELP') {
+      setIsPanelOpen(false);
+      setMobileFocusTarget(null);
+      return;
+    }
+
+    if (SERVICES[service]) {
+      setIsPanelOpen(false);
+      setMobileFocusTarget(service);
     }
   };
 
@@ -31,10 +84,15 @@ export default function App() {
       <Sidebar selectedService={selectedService} onSelect={handleSelect} />
       
       <div className="flex-1 flex flex-col relative lg:pl-80">
-        <TopNav selectedService={selectedService} onSelect={handleSelect} />
+        <TopNav selectedService={selectedService} onSelect={handleSelect} onMobileNavigate={handleMobileNavigate} />
         
-        <main className="flex-1 flex relative pt-16 pb-[calc(5rem+env(safe-area-inset-bottom))] lg:pb-0 h-full overflow-hidden">
-          <Map selectedService={selectedService} onSelect={handleSelect} />
+        <main className="flex-1 flex relative h-full overflow-hidden">
+          <Map
+            selectedService={selectedService}
+            onSelect={handleSelect}
+            onMarkerSelect={handleMarkerSelect}
+            focusPopupService={mobileFocusTarget}
+          />
           
           <AnimatePresence>
             {isPanelOpen && SERVICES[selectedService] && (
@@ -59,8 +117,6 @@ export default function App() {
           </div>
         </footer>
       </div>
-
-      <MobileNav selectedService={selectedService} onSelect={handleSelect} />
     </div>
   );
 }

@@ -101,25 +101,6 @@ export const SERVICES: Record<string, ServiceData> = {
       { label: 'With Consent', value: 'Up to $30,000' }
     ]
   },
-  CLINICS: {
-    id: 'CLINICS',
-    name: 'Legal Clinics',
-    fullName: 'Community Legal Clinics',
-    tagline: 'Basic legal advice for those in need.',
-    description: 'Community legal clinics provide basic legal advice to Singaporeans and Permanent Residents who have never sought legal advice before and are not represented by a lawyer.',
-    address: 'Various Locations',
-    postalCode: 'Singapore',
-    locationName: 'Community Centres',
-    coordinates: { lat: 1.3521, lng: 103.8198 }, // General Singapore center
-    hours: [
-      { day: 'Monday – Friday', time: 'By Appointment' }
-    ],
-    videoUrl: '#',
-    videoThumbnail: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDjX_HIpVAQBbp4X1ZNwOdLBdTknAe1HZc9v3kNdaZH-xuf06Tc5NJVzTJCX_vx0UopqxanM8_Sslt3d167cwqIhB3QMdOKbd_Zs_0cWP_IduDGrGmFHHVxLvwAOyRB9227MtvQrDv72rDA5oz2iX7TcQORMB_RXQl-ff8svg3gDiCoonRSzB0Iy3IIxLHR2eG-Jb7CQjUafLeaFQSeDmqr0K7FNNCSgk7r4UrM0hmuIGm0WlTR2vmDGUvGx83bL7vHVv_i2oAkOHRg',
-    videoTitle: 'How Legal Clinics Work',
-    mapImage: '',
-    heroImage: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB06bqfJskhpjVYygzNvpqLccEnDl1V8TVqT3Bln6L_jJiYY1xdgb7j66aXvh9d6fxR30om3R1qi1whfgeVnIBMFrOVDoEq-GcIPHBlcjBc4IvSBoJqftFWrycY_cw6V55CA-SYfVxwurm2gPPra_ulE9GkvZ7JDXoX5AhlbjAvE3BZeii38COF2d3i93jnM__rMCU08Lu5kooH0dF5g-xqSUfaEjqyJOVAVMIauSvJzSwQJFndLpQXzV9AOPx2f8fBt_jqX_1DPJYv'
-  },
   SUPREME_COURT: {
     id: 'SUPREME_COURT',
     name: 'Supreme Court',
@@ -221,5 +202,205 @@ export const SERVICES: Record<string, ServiceData> = {
     videoTitle: 'Migrant Worker Support',
     mapImage: '',
     heroImage: 'https://picsum.photos/seed/migrant/1200/600'
+  },
+  LEGAL_AID_BUREAU: {
+    id: 'LEGAL_AID_BUREAU',
+    name: 'Legal Aid Bureau',
+    fullName: 'Ministry of Law - Legal Aid Bureau',
+    tagline: 'Civil legal aid for eligible applicants.',
+    description: 'The Legal Aid Bureau provides legal aid and advice to eligible persons for civil matters and family-related legal proceedings.',
+    address: '45 Maxwell Road, #07-11 The URA Centre (East Wing)',
+    postalCode: 'Singapore 069118',
+    locationName: 'Maxwell',
+    coordinates: { lat: 1.2807, lng: 103.8446 },
+    hours: [
+      { day: 'Monday - Friday', time: '8:30am - 5:00pm' },
+      { day: 'Saturday, Sunday & PH', time: 'Closed' }
+    ],
+    videoUrl: '#',
+    videoThumbnail: 'https://picsum.photos/seed/lab/800/450',
+    videoTitle: 'Legal Aid Bureau Services',
+    mapImage: '',
+    heroImage: 'https://picsum.photos/seed/lab/1200/600'
+  },
+  FAMILY_JUSTICE_COURTS: {
+    id: 'FAMILY_JUSTICE_COURTS',
+    name: 'Family Justice Courts',
+    fullName: 'Family Justice Courts of Singapore',
+    tagline: 'Family-focused court services and support.',
+    description: 'Family Justice Courts hear family-related matters including divorce, maintenance, family protection and probate processes.',
+    address: '3 Havelock Square',
+    postalCode: 'Singapore 059725',
+    locationName: 'Octagon Building',
+    coordinates: { lat: 1.2873, lng: 103.8437 },
+    hours: [
+      { day: 'Monday - Thursday', time: '8:30am - 6:00pm' },
+      { day: 'Friday', time: '8:30am - 5:30pm' }
+    ],
+    videoUrl: '#',
+    videoThumbnail: 'https://picsum.photos/seed/fjc/800/450',
+    videoTitle: 'Family Justice Courts Overview',
+    mapImage: '',
+    heroImage: 'https://picsum.photos/seed/fjc/1200/600'
+  },
+  PUBLIC_DEFENDER_OFFICE: {
+    id: 'PUBLIC_DEFENDER_OFFICE',
+    name: 'Public Defender\'s Office',
+    fullName: 'Public Defender\'s Office (State Courts)',
+    tagline: 'Criminal defence legal assistance for eligible persons.',
+    description: 'The Public Defender\'s Office provides legal representation for eligible accused persons facing non-capital criminal charges.',
+    address: '1 Havelock Square, B1 (State Courts)',
+    postalCode: 'Singapore 059724',
+    locationName: 'State Courts',
+    coordinates: { lat: 1.2855, lng: 103.8441 },
+    hours: [
+      { day: 'Monday - Friday', time: 'By Appointment / Office Hours' },
+      { day: 'Saturday, Sunday & PH', time: 'Closed' }
+    ],
+    videoUrl: '#',
+    videoThumbnail: 'https://picsum.photos/seed/pdo/800/450',
+    videoTitle: 'Public Defender\'s Office Services',
+    mapImage: '',
+    heroImage: 'https://picsum.photos/seed/pdo/1200/600'
+  },
+  STATE_COURTS_HELP_CENTRE: {
+    id: 'STATE_COURTS_HELP_CENTRE',
+    name: 'State Courts HELP Centre',
+    fullName: 'HELP Centre, State Courts',
+    tagline: 'Court support information and assistance.',
+    description: 'The HELP Centre assists court users with procedural guidance, forms and directions for matters within the State Courts.',
+    address: '1 Havelock Square, B1 (State Courts)',
+    postalCode: 'Singapore 059724',
+    locationName: 'State Courts',
+    coordinates: { lat: 1.2857, lng: 103.8443 },
+    hours: [
+      { day: 'Monday - Thursday', time: '8:30am - 6:00pm' },
+      { day: 'Friday', time: '8:30am - 5:30pm' }
+    ],
+    videoUrl: '#',
+    videoThumbnail: 'https://picsum.photos/seed/helpcentre/800/450',
+    videoTitle: 'HELP Centre Services',
+    mapImage: '',
+    heroImage: 'https://picsum.photos/seed/helpcentre/1200/600'
+  },
+  CENTRE_SPECIALIST_SERVICES: {
+    id: 'CENTRE_SPECIALIST_SERVICES',
+    name: 'Centre for Specialist Services',
+    fullName: 'State Courts Centre for Specialist Services',
+    tagline: 'Counselling and psychological support for court users.',
+    description: 'The Centre for Specialist Services provides counselling and psychological services for users with active matters in the State Courts.',
+    address: '1 Havelock Square, Level 18 (State Courts)',
+    postalCode: 'Singapore 059724',
+    locationName: 'State Courts',
+    coordinates: { lat: 1.2859, lng: 103.8444 },
+    hours: [
+      { day: 'Monday - Friday', time: 'By Appointment' },
+      { day: 'Saturday, Sunday & PH', time: 'Closed' }
+    ],
+    videoUrl: '#',
+    videoThumbnail: 'https://picsum.photos/seed/css/800/450',
+    videoTitle: 'Specialist Support Services',
+    mapImage: '',
+    heroImage: 'https://picsum.photos/seed/css/1200/600'
+  },
+  EMPLOYMENT_CLAIMS_TRIBUNAL: {
+    id: 'EMPLOYMENT_CLAIMS_TRIBUNAL',
+    name: 'Employment Claims Tribunals',
+    fullName: 'Employment Claims Tribunals (State Courts)',
+    tagline: 'Resolve salary-related employment disputes.',
+    description: 'The Employment Claims Tribunals hear salary-related and wrongful dismissal disputes after mandatory pre-filing requirements are met.',
+    address: '1 Havelock Square, Level 3 (State Courts)',
+    postalCode: 'Singapore 059724',
+    locationName: 'State Courts',
+    coordinates: { lat: 1.2861, lng: 103.8442 },
+    hours: [
+      { day: 'Monday - Friday', time: 'Court / Registry Hours' },
+      { day: 'Saturday, Sunday & PH', time: 'Closed' }
+    ],
+    videoUrl: '#',
+    videoThumbnail: 'https://picsum.photos/seed/ect/800/450',
+    videoTitle: 'Employment Claims Process',
+    mapImage: '',
+    heroImage: 'https://picsum.photos/seed/ect/1200/600'
+  },
+  COMMUNITY_DISPUTES_TRIBUNAL: {
+    id: 'COMMUNITY_DISPUTES_TRIBUNAL',
+    name: 'Community Disputes Tribunals',
+    fullName: 'Community Disputes Resolution Tribunals',
+    tagline: 'Resolve neighbour disputes through the courts.',
+    description: 'The Community Disputes Resolution Tribunals hear certain neighbour disputes and related enforcement matters under community dispute laws.',
+    address: '1 Havelock Square, Level 3 (State Courts)',
+    postalCode: 'Singapore 059724',
+    locationName: 'State Courts',
+    coordinates: { lat: 1.2853, lng: 103.8440 },
+    hours: [
+      { day: 'Monday - Friday', time: 'Court / Registry Hours' },
+      { day: 'Saturday, Sunday & PH', time: 'Closed' }
+    ],
+    videoUrl: '#',
+    videoThumbnail: 'https://picsum.photos/seed/cdrt/800/450',
+    videoTitle: 'Community Disputes Resolution',
+    mapImage: '',
+    heroImage: 'https://picsum.photos/seed/cdrt/1200/600'
+  },
+  SINGAPORE_MEDIATION_CENTRE: {
+    id: 'SINGAPORE_MEDIATION_CENTRE',
+    name: 'Singapore Mediation Centre',
+    fullName: 'Singapore Mediation Centre (SMC)',
+    tagline: 'Mediation services for civil and commercial disputes.',
+    description: 'Singapore Mediation Centre provides mediation services and dispute resolution support for parties seeking out-of-court settlements.',
+    address: '1 Supreme Court Lane, Level 1',
+    postalCode: 'Singapore 178879',
+    locationName: 'Supreme Court',
+    coordinates: { lat: 1.2898, lng: 103.8512 },
+    hours: [
+      { day: 'Monday - Friday', time: '9:00am - 4:30pm' },
+      { day: 'Saturday, Sunday & PH', time: 'Closed' }
+    ],
+    videoUrl: '#',
+    videoThumbnail: 'https://picsum.photos/seed/smc/800/450',
+    videoTitle: 'Mediation at SMC',
+    mapImage: '',
+    heroImage: 'https://picsum.photos/seed/smc/1200/600'
+  },
+  SINGAPORE_INTERNATIONAL_MEDIATION_CENTRE: {
+    id: 'SINGAPORE_INTERNATIONAL_MEDIATION_CENTRE',
+    name: 'SIMC',
+    fullName: 'Singapore International Mediation Centre',
+    tagline: 'International commercial mediation services.',
+    description: 'SIMC provides international mediation services and case administration for complex cross-border disputes.',
+    address: '28 Maxwell Road, #03-10/11 Maxwell Chambers Suites',
+    postalCode: 'Singapore 069120',
+    locationName: 'Maxwell Chambers Suites',
+    coordinates: { lat: 1.2809, lng: 103.8450 },
+    hours: [
+      { day: 'Monday - Friday', time: 'Office Hours' },
+      { day: 'Saturday, Sunday & PH', time: 'Closed' }
+    ],
+    videoUrl: '#',
+    videoThumbnail: 'https://picsum.photos/seed/simc/800/450',
+    videoTitle: 'SIMC Services',
+    mapImage: '',
+    heroImage: 'https://picsum.photos/seed/simc/1200/600'
+  },
+  MAXWELL_CHAMBERS: {
+    id: 'MAXWELL_CHAMBERS',
+    name: 'Maxwell Chambers',
+    fullName: 'Maxwell Chambers Dispute Resolution Hub',
+    tagline: 'International dispute resolution and hearing facilities.',
+    description: 'Maxwell Chambers is Singapore\'s integrated dispute resolution hub supporting mediation, arbitration and hearing services.',
+    address: '32 Maxwell Road, #03-01',
+    postalCode: 'Singapore 069115',
+    locationName: 'Maxwell Chambers',
+    coordinates: { lat: 1.2804, lng: 103.8454 },
+    hours: [
+      { day: 'Monday - Friday', time: 'Office Hours' },
+      { day: 'Saturday, Sunday & PH', time: 'Closed' }
+    ],
+    videoUrl: '#',
+    videoThumbnail: 'https://picsum.photos/seed/maxwell/800/450',
+    videoTitle: 'Maxwell Chambers Overview',
+    mapImage: '',
+    heroImage: 'https://picsum.photos/seed/maxwell/1200/600'
   }
 };
