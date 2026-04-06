@@ -130,7 +130,7 @@ export default function App() {
 
         <footer className="fixed bottom-0 left-0 lg:left-80 right-0 bg-surface/80 backdrop-blur-md border-t border-outline-variant/10 hidden lg:flex lg:flex-row justify-between items-center px-8 py-4 z-30">
           <div className="text-[10px] uppercase tracking-widest font-bold text-on-surface">
-            © 2024 Singapore Ministry of Law. All Rights Reserved.
+            2026 SINGAPORE MINISTRY OF LAW
           </div>
           <div className="flex gap-8">
             <a href="#" className="text-[10px] uppercase tracking-widest font-bold text-on-surface hover:text-primary transition-colors">Contact Us</a>
