@@ -508,10 +508,22 @@ export const Map: React.FC<MapProps> = ({ selectedService, onSelect, onMarkerSel
 
       const mapRect = map.getContainer().getBoundingClientRect();
       const popupRect = popupEl.getBoundingClientRect();
+      const panelOverlay = document.querySelector<HTMLElement>('[data-info-panel-overlay="true"]');
 
       const popupCenterX = popupRect.left + popupRect.width / 2;
       const popupCenterY = popupRect.top + popupRect.height / 2;
-      const mapCenterX = mapRect.left + mapRect.width / 2;
+
+      let visibleMapWidth = mapRect.width;
+      if (window.innerWidth >= 1024 && panelOverlay) {
+        const panelRect = panelOverlay.getBoundingClientRect();
+        const overlapsVertically = panelRect.bottom > mapRect.top && panelRect.top < mapRect.bottom;
+        if (overlapsVertically) {
+          const occludedRightWidth = Math.max(0, mapRect.right - panelRect.left);
+          visibleMapWidth = Math.max(0, mapRect.width - occludedRightWidth);
+        }
+      }
+
+      const mapCenterX = mapRect.left + visibleMapWidth / 2;
       const mapCenterY = mapRect.top + mapRect.height / 2;
 
       const deltaX = popupCenterX - mapCenterX;

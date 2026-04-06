@@ -118,7 +118,7 @@ export default function App() {
           
           <AnimatePresence>
             {isPanelOpen && SERVICES[selectedService] && (
-              <div className="absolute inset-y-0 right-0 w-full z-20 lg:w-auto">
+              <div data-info-panel-overlay="true" className="absolute inset-y-0 right-0 w-full z-20 lg:w-auto">
                 <InfoPanel 
                   service={SERVICES[selectedService]} 
                   onClose={() => setIsPanelOpen(false)} 
