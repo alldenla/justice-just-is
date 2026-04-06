@@ -102,6 +102,15 @@
   .glass-panel {
     @apply bg-surface/90 backdrop-blur-[20px] border border-outline-variant/20 shadow-xl;
   }
+
+  /* Keep fullscreen playback behavior native-like (letterboxed instead of cover-cropped). */
+  .service-video:fullscreen,
+  .service-video:-webkit-full-screen {
+    object-fit: contain !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: #000;
+  }
   
   /* Custom Leaflet Popup Styling */
   .leaflet-popup {

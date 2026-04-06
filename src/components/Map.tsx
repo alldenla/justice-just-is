@@ -579,6 +579,15 @@ export const Map: React.FC<MapProps> = ({ selectedService, onSelect, onMarkerSel
     };
   }, [focusPopupService, allMarkers]);
 
+  useEffect(() => {
+    if (selectedService !== 'HOME' && selectedService !== 'HELP') {
+      return;
+    }
+
+    mapRef.current?.closePopup();
+    Object.values(markerRefs.current).forEach((marker) => marker?.closePopup());
+  }, [selectedService]);
+
   return (
     <div className="flex-1 relative bg-[#f8f9fa] overflow-hidden h-full z-0">
       <MapContainer 

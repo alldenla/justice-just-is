@@ -135,7 +135,7 @@ export const InfoPanel: React.FC<InfoPanelProps> = ({ service, onClose }) => {
               {isVideoPlaying ? (
                 <video
                   key={`${service.id}-${service.videoUrl}`}
-                  className="absolute inset-0 w-full h-full object-cover"
+                  className="absolute inset-0 w-full h-full object-cover service-video"
                   controls
                   autoPlay
                   playsInline
