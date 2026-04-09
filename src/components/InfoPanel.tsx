@@ -29,9 +29,17 @@ const SERVICE_ACTIONS: Partial<Record<ServiceType, { label: string; url: string 
   },
 };
 
+const SERVICE_DIRECTION_LINKS: Partial<Record<ServiceType, string>> = {
+  SCT: 'https://www.google.com/maps/place/Small+Claims+Tribunals/@1.2863116,103.8433516,17z/data=!4m14!1m7!3m6!1s0x31da19751c2baaeb:0xdfd55f08c1512bb3!2sState+Courts!8m2!3d1.2863116!4d103.8433516!16s%2Fm%2F03c_4n7!3m5!1s0x31da19751dc69bbf:0x985eb704ea340c74!8m2!3d1.2862595!4d103.8434627!16s%2Fg%2F1tddpq1p?entry=ttu&g_ep=EgoyMDI2MDQwMS4wIKXMDSoASAFQAw%3D%3D',
+  OSLAS: 'https://www.google.com/maps/place/The+Community+Justice+Centre/@1.2863116,103.8433516,17z/data=!4m15!1m8!3m7!1s0x31da19751c2baaeb:0xdfd55f08c1512bb3!2sState+Courts!8m2!3d1.2863116!4d103.8433516!10e3!16s%2Fm%2F03c_4n7!3m5!1s0x31da19751aff4837:0xeb91578be6c346f0!8m2!3d1.2863116!4d103.8433516!16s%2Fg%2F11cp74r6q5?entry=ttu&g_ep=EgoyMDI2MDQwMS4wIKXMDSoASAFQAw%3D%3D',
+};
+
 export const InfoPanel: React.FC<InfoPanelProps> = ({ service, onClose }) => {
   const serviceLogo = SERVICE_LOGOS[service.id];
   const primaryAction = SERVICE_ACTIONS[service.id];
+  const directionsUrl =
+    SERVICE_DIRECTION_LINKS[service.id] ??
+    `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(service.address + ' ' + service.postalCode)}`;
   const [videoAspectRatio, setVideoAspectRatio] = useState(16 / 9);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
 
@@ -183,7 +191,7 @@ export const InfoPanel: React.FC<InfoPanelProps> = ({ service, onClose }) => {
         {/* Directions Action */}
         <div className="mb-8">
           <a
-            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(service.address + ' ' + service.postalCode)}`}
+            href={directionsUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="w-full flex items-center justify-between p-5 bg-primary text-on-primary rounded-3xl hover:bg-primary-dim transition-all group shadow-xl shadow-primary/20"
