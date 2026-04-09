@@ -94,7 +94,47 @@ const ServicePopup: React.FC<{ service: ServiceData; onSelect: (id: ServiceType)
   const popupLogo = POPUP_LOGOS[service.id];
 
   // Template 1: Community Legal Clinic (CLC)
-  if (['LEGAL_AID_BUREAU', 'CDC_TOA_PAYOH', 'CLC_WOODLANDS', 'CLC_HOUGANG', 'MIGRANT_CLINIC', 'PRO_BONO_SG', 'PUBLIC_DEFENDER_OFFICE', 'STATE_COURTS_HELP_CENTRE', 'CENTRE_SPECIALIST_SERVICES'].includes(service.id)) {
+  if ([
+    'LEGAL_AID_BUREAU',
+    'CDC_TOA_PAYOH',
+    'CLC_WOODLANDS',
+    'CLC_HOUGANG',
+    'MIGRANT_CLINIC',
+    'PRO_BONO_SG',
+    'PUBLIC_DEFENDER_OFFICE',
+    'STATE_COURTS_HELP_CENTRE',
+    'CENTRE_SPECIALIST_SERVICES',
+    'BISHAN_MARYMOUNT_CC',
+    'BUKIT_BATOK_EAST_CC',
+    'EUNOS_CC',
+    'FERNVALE_LEGAL_ADVICE',
+    'GEYLANG_WEST_CC',
+    'HENDERSON_CC',
+    'HWI_YOH_CC',
+    'JOO_CHIAT_CC',
+    'JURONG_SPRING_CC',
+    'KAMPONG_KEMBANGAN_CC',
+    'KEBUN_BAHRU_LINK_RC',
+    'KIM_SENG_CC',
+    'KRETA_AYER_CC',
+    'MARINE_PARADE_CC',
+    'NEE_SOON_EAST_CC',
+    'PASIR_RIS_ELIAS_CC',
+    'POTONG_PASIR_CC',
+    'QUEENSTOWN_CC',
+    'RADIN_MAS_CC',
+    'RIVERVALE_CC',
+    'SENGKANG_CC',
+    'SIGLAP_CC',
+    'TAMPINES_CENTRAL_CC',
+    'TAMPINES_CHANGKAT_CC',
+    'TAMPINES_NORTH_CC',
+    'TANJONG_PAGAR_CC',
+    'THE_FRONTIER_CC',
+    'ULU_PANDAN_CC',
+    'WHAMPOA_CC',
+    'ZHENGHUA_CC',
+  ].includes(service.id)) {
     return (
       <div className="w-[min(300px,calc(100vw-2rem))] overflow-hidden bg-surface rounded-2xl shadow-2xl">
         <div className="h-1 bg-gradient-to-r from-primary to-primary-dim"></div>
@@ -185,7 +225,7 @@ const ServicePopup: React.FC<{ service: ServiceData; onSelect: (id: ServiceType)
             </div>
             <div className="flex gap-3 items-start text-[11px] text-on-surface-variant">
               <Phone className="w-4 h-4 text-primary shrink-0" />
-              <span>+65 6336 0644</span>
+                <span>Supreme Court information</span>
             </div>
           </div>
           <div className="flex gap-2">
@@ -499,6 +539,14 @@ export const Map: React.FC<MapProps> = ({ selectedService, onSelect, onMarkerSel
   const markerRefs = useRef<Partial<Record<ServiceType, L.Marker>>>( {} );
   const currentService = SERVICES[selectedService];
   const shouldDisableFlyTo = !!focusPopupService && focusPopupService === selectedService;
+  const hiddenStateCourtsPins: ServiceType[] = [
+    'PRO_BONO_SG',
+    'PUBLIC_DEFENDER_OFFICE',
+    'STATE_COURTS_HELP_CENTRE',
+    'CENTRE_SPECIALIST_SERVICES',
+    'EMPLOYMENT_CLAIMS_TRIBUNAL',
+    'COMMUNITY_DISPUTES_TRIBUNAL',
+  ];
 
   // Recenter by using the popup's real rendered position instead of marker offsets.
   const centerPopupOnScreen = (popup: L.Popup, map: L.Map) => {
@@ -542,10 +590,12 @@ export const Map: React.FC<MapProps> = ({ selectedService, onSelect, onMarkerSel
     return [1.285, 103.845];
   }, [currentService]);
 
-  const mainServices: ServiceType[] = ['FIDReC', 'OSLAS', 'SCT', 'SUPREME_COURT'];
+  const mainServices: ServiceType[] = ['FIDReC', 'OSLAS', 'SCT'];
   
   const allMarkers = useMemo(() => {
-    const markers = Object.values(SERVICES).map(service => ({
+    const markers = Object.values(SERVICES)
+      .filter((service) => !hiddenStateCourtsPins.includes(service.id))
+      .map(service => ({
       id: service.id,
       label: service.name,
       fullName: service.fullName,
@@ -597,7 +647,7 @@ export const Map: React.FC<MapProps> = ({ selectedService, onSelect, onMarkerSel
     }
 
     mapRef.current?.closePopup();
-    Object.values(markerRefs.current).forEach((marker) => marker?.closePopup());
+    (Object.values(markerRefs.current) as Array<L.Marker | undefined>).forEach((marker) => marker?.closePopup());
   }, [selectedService]);
 
   return (
